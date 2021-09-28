@@ -5,7 +5,12 @@ const fetchPRs = async (owner, repo) => {
     return prData;
 }
 
+const fetchCommits = async (commitsURL) => {
+    const commitArr = await axios.get(commitsURL)
+    return commitArr.data.length || 0
+}
 
 module.exports = {
-    fetchPRs
+    fetchPRs,
+    fetchCommits
 }

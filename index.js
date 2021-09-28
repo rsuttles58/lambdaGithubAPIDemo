@@ -1,19 +1,12 @@
-const axios = require('axios');
+const api = require('./api');
 
-const apiCall = (owner, repo) => {
-    axios
-    .get(`https://api.github.com/repos/${owner}/${repo}/pulls?state=open`)
-    .then((response, error) => {
-        if(error){
-            console.log(error);
-        }
-
-        console.log(response.data[0])
-    })
+const dataFetch = async(owner, repo) => {
+    const data = await api.fetchPRs(owner, repo);
+    return data;
 }
 
 const handler = async (owner, repo) => {
-    apiCall(owner, repo)
+    dataFetch(owner, repo)
 }
 
 handler('kamranahmedse', 'developer-roadmap')

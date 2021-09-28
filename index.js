@@ -22,15 +22,26 @@ const mainProcess = async (repository) => {
         const repoArray = urlParser(repository)
         const prData = await api.fetchPRs(repoArray[0], repoArray[1])
         const responseData = await commitCounter(prData.data);
-        console.log('responseData');
-        console.log(responseData);
+        return responseData;
     } catch(error){
         console.log(error)
     }
 } 
 
-const handler = async (repo) => {
-    mainProcess(repo)
+const handler = async (event, context, callback,) => {
+    const repo = event.queryStringParameters.repository
+
+    try{
+        const response = await mainProcess(repo)
+        console.log(response);
+        return response
+    } catch(err){
+        console.log(err);
+        return callback(500, "Error while processing repository URL.")
+    }
 }
 
-handler('https://github.com/kamranahmedse/developer-roadmap')
+module.exports = {
+    handler,
+    urlParser,
+}

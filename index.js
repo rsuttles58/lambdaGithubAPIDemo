@@ -21,8 +21,8 @@ const mainProcess = async (repository) => {
     try{
         const repoArray = urlParser(repository)
         const prData = await api.fetchPRs(repoArray[0], repoArray[1])
-        const responseData = await commitCounter(prData.data);
-        return responseData;
+        const commitData = await commitCounter(prData.data);
+        return commitData;
     } catch(error){
         console.log(error)
     }
@@ -30,11 +30,16 @@ const mainProcess = async (repository) => {
 
 const handler = async (event, context, callback,) => {
     const repo = event.queryStringParameters.repository
-
+    if ( !repo || repo.length < 15) return callback(500, "repository not included or invalid value passed.")
     try{
-        const response = await mainProcess(repo)
-        console.log(response);
-        return response
+        const responseData = await mainProcess(repo)
+        const response = {
+            "statusCode": 200,
+            "body": JSON.stringify(responseData),
+            "isBase64Encoded": false
+        }
+        console.log(responseData)
+        return response;
     } catch(err){
         console.log(err);
         return callback(500, "Error while processing repository URL.")

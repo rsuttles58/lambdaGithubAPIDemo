@@ -1,6 +1,9 @@
 const api = require('./api');
 
+const isURL = url => typeof url === "string" && url.includes("www");
+
 const urlParser = (url) => {
+    if(!isURL(url)) return []
     const repoArr = url.split("/")
     const [,,,owner, repoVal] = repoArr
     return [owner, repoVal]
